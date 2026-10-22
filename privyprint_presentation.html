@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PrivyPrint — Complete Project Presentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --void: #060711;
+      --cyan: #20d9ff;
+      --violet: #8b5cf6;
+      --cyan-dim: rgba(32,217,255,0.15);
+      --violet-dim: rgba(139,92,246,0.12);
+      --glass-bg: rgba(13,18,36,0.72);
+      --glass-border: rgba(255,255,255,0.08);
+      --text-primary: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-accent: #20d9ff;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--void);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(32,217,255,0.18), transparent 45%),
+        radial-gradient(circle at 100% 0%, rgba(139,92,246,0.14), transparent 45%),
+        radial-gradient(circle at 50% 100%, rgba(32,217,255,0.08), transparent 40%);
+    }
+
+    body::after {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 50px 50px;
+      mask-image: radial-gradient(ellipse at center, black, transparent 80%);
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(24px);
+      background: rgba(6,7,17,0.85);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 1.2rem; font-weight: 800; letter-spacing: -0.5px;
+    }
+    .nav-brand .icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--cyan), var(--violet));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+    }
+    .nav-brand span { background: linear-gradient(90deg, var(--cyan), var(--violet)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    .nav-tabs {
+      display: flex; gap: 4px; list-style: none;
+    }
+    .nav-tabs button {
+      background: none; border: none; cursor: pointer;
+      color: var(--text-muted); font-family: inherit; font-size: 0.78rem;
+      font-weight: 600; padding: 6px 12px; border-radius: 6px;
+      transition: all 0.2s; letter-spacing: 0.3px;
+    }
+    .nav-tabs button:hover { color: var(--text-primary); background: rgba(255,255,255,0.05); }
+    .nav-tabs button.active { color: var(--cyan); background: rgba(32,217,255,0.1); }
+
+    /* ── LAYOUT ── */
+    .container { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 0 2rem 4rem; }
+
+    /* ── SECTIONS ── */
+    .section { display: none; animation: fadeUp 0.4s ease both; }
+    .section.active { display: block; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center; padding: 4rem 0 2rem;
+    }
+    .hero .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      border: 1px solid rgba(32,217,255,0.3);
+      background: rgba(32,217,255,0.08);
+      border-radius: 999px; padding: 4px 14px;
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--cyan); margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 900; letter-spacing: -2px; line-height: 1.05;
+      margin-bottom: 1.2rem;
+    }
+    .hero h1 .grad { background: linear-gradient(135deg, var(--cyan) 0%, var(--violet) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto 2rem; line-height: 1.7; }
+
+    .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 3rem; }
+    .tag { border: 1px solid var(--glass-border); background: rgba(255,255,255,0.04); border-radius: 6px; padding: 4px 12px; font-size: 0.75rem; color: var(--text-muted); }
+
+    /* ── CARDS ── */
+    .glass-card {
+      border: 1px solid var(--glass-border);
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border-radius: 16px;
+      padding: 1.8rem;
+      margin-bottom: 1.5rem;
+      transition: border-color 0.3s, transform 0.2s;
+    }
+    .glass-card:hover { border-color: rgba(32,217,255,0.2); transform: translateY(-2px); }
+
+    .glass-card h2 {
+      font-size: 1.4rem; font-weight: 800; margin-bottom: 0.6rem;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .glass-card h3 { font-size: 1.05rem; font-weight: 700; margin: 1.2rem 0 0.6rem; color: var(--cyan); }
+    .glass-card p { color: var(--text-muted); line-height: 1.75; font-size: 0.9rem; }
+    .glass-card ul { color: var(--text-muted); padding-left: 1.2rem; line-height: 2; font-size: 0.88rem; }
+    .glass-card ul li::marker { color: var(--cyan); }
+
+    .icon-badge {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: linear-gradient(135deg, rgba(32,217,255,0.2), rgba(139,92,246,0.2));
+      border: 1px solid rgba(32,217,255,0.3);
+      display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;
+    }
+
+    /* ── GRID ── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+    @media(max-width: 768px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+    /* ── STAT CARDS ── */
+    .stat-card {
+      border: 1px solid var(--glass-border);
+      background: rgba(255,255,255,0.03);
+      border-radius: 12px; padding: 1.4rem;
+      text-align: center;
+    }
+    .stat-card .value { font-size: 2rem; font-weight: 900; background: linear-gradient(135deg, var(--cyan), var(--violet)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .stat-card .label { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; letter-spacing: 0.5px; }
+
+    /* ── CODE BLOCK ── */
+    .code-block {
+      background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px; padding: 1.2rem 1.4rem; font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem; line-height: 1.8; overflow-x: auto; margin: 1rem 0;
+      color: #a8b3cc;
+    }
+    .code-block .kw { color: var(--violet); }
+    .code-block .fn { color: var(--cyan); }
+    .code-block .str { color: #4ade80; }
+    .code-block .cm { color: #475569; }
+    .code-block .num { color: #fb923c; }
+    .code-block .type { color: #fbbf24; }
+
+    /* ── TIMELINE ── */
+    .timeline { position: relative; padding-left: 2rem; }
+    .timeline::before { content: ''; position: absolute; left: 0.4rem; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--cyan), var(--violet)); border-radius: 999px; }
+    .timeline-item { position: relative; margin-bottom: 1.8rem; }
+    .timeline-item::before {
+      content: ''; position: absolute; left: -1.8rem; top: 4px;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--cyan), var(--violet));
+      border: 2px solid var(--void);
+    }
+    .timeline-item .week { font-size: 0.72rem; font-weight: 700; color: var(--cyan); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; }
+    .timeline-item .task { font-size: 0.88rem; font-weight: 600; margin-bottom: 4px; }
+    .timeline-item .desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* ── TABLE ── */
+    .fancy-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .fancy-table th {
+      background: rgba(32,217,255,0.08); border-bottom: 1px solid rgba(32,217,255,0.2);
+      padding: 10px 14px; text-align: left; font-weight: 700;
+      color: var(--cyan); font-size: 0.78rem; letter-spacing: 0.5px;
+    }
+    .fancy-table td { border-bottom: 1px solid var(--glass-border); padding: 10px 14px; color: var(--text-muted); vertical-align: top; line-height: 1.6; }
+    .fancy-table tr:hover td { background: rgba(255,255,255,0.025); color: var(--text-primary); }
+    .fancy-table .member-name { font-weight: 700; color: var(--text-primary); }
+
+    /* ── PROGRESS BAR ── */
+    .progress-wrap { margin: 0.6rem 0; }
+    .progress-label { display: flex; justify-content: space-between; font-size: 0.77rem; margin-bottom: 4px; }
+    .progress-bar { height: 6px; background: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--cyan), var(--violet)); transition: width 1.2s ease; }
+
+    /* ── FLOW DIAGRAM ── */
+    .flow { display: flex; flex-wrap: wrap; gap: 0; align-items: center; margin: 1.5rem 0; }
+    .flow-step {
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      min-width: 100px; flex: 1;
+    }
+    .flow-circle {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: linear-gradient(135deg, rgba(32,217,255,0.2), rgba(139,92,246,0.2));
+      border: 2px solid rgba(32,217,255,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; margin-bottom: 8px;
+    }
+    .flow-label { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; max-width: 80px; line-height: 1.4; }
+    .flow-arrow { font-size: 1.2rem; color: var(--cyan); align-self: center; padding-bottom: 24px; flex-shrink: 0; opacity: 0.5; }
+
+    /* ── SECTION HEADER ── */
+    .section-header { padding: 2.5rem 0 1.5rem; }
+    .section-header .num { font-size: 0.72rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--cyan); margin-bottom: 6px; }
+    .section-header h2 { font-size: 2rem; font-weight: 900; letter-spacing: -1px; }
+    .section-header p { color: var(--text-muted); font-size: 0.95rem; margin-top: 6px; max-width: 600px; line-height: 1.6; }
+
+    /* ── ARCH DIAGRAM ── */
+    .arch-row { display: flex; gap: 1rem; margin-bottom: 1rem; }
+    .arch-layer {
+      flex: 1; border: 1px solid var(--glass-border); border-radius: 12px;
+      padding: 1rem; position: relative;
+    }
+    .arch-layer .layer-name {
+      font-size: 0.68rem; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--cyan); margin-bottom: 0.8rem; padding-bottom: 6px;
+      border-bottom: 1px solid rgba(32,217,255,0.15);
+    }
+    .arch-layer .components { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip {
+      border-radius: 6px; padding: 4px 10px; font-size: 0.72rem; font-weight: 600;
+      border: 1px solid;
+    }
+    .chip-cyan { background: rgba(32,217,255,0.1); border-color: rgba(32,217,255,0.25); color: #a5f3fc; }
+    .chip-violet { background: rgba(139,92,246,0.1); border-color: rgba(139,92,246,0.3); color: #c4b5fd; }
+    .chip-green { background: rgba(74,222,128,0.1); border-color: rgba(74,222,128,0.3); color: #86efac; }
+    .chip-amber { background: rgba(251,191,36,0.1); border-color: rgba(251,191,36,0.3); color: #fde68a; }
+
+    /* ── ETHICAL PILLARS ── */
+    .pillar-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin: 1rem 0; }
+    .pillar {
+      border: 1px solid var(--glass-border); border-radius: 12px; padding: 1.2rem;
+      text-align: center; background: rgba(255,255,255,0.02); transition: all 0.3s;
+    }
+    .pillar:hover { border-color: rgba(32,217,255,0.3); background: rgba(32,217,255,0.05); transform: translateY(-3px); }
+    .pillar .emoji { font-size: 2rem; margin-bottom: 0.6rem; display: block; }
+    .pillar .pillar-title { font-size: 0.82rem; font-weight: 800; margin-bottom: 4px; }
+    .pillar .pillar-desc { font-size: 0.73rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* ── USER FLOW STEPS ── */
+    .user-steps { counter-reset: step; display: flex; flex-direction: column; gap: 12px; }
+    .user-step {
+      display: flex; align-items: flex-start; gap: 14px;
+      border: 1px solid var(--glass-border); border-radius: 10px;
+      padding: 1rem 1.2rem; background: rgba(255,255,255,0.02);
+      transition: all 0.2s; cursor: default;
+    }
+    .user-step:hover { border-color: rgba(32,217,255,0.25); background: rgba(32,217,255,0.04); }
+    .step-num {
+      width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
+      background: linear-gradient(135deg, rgba(32,217,255,0.25), rgba(139,92,246,0.25));
+      border: 1px solid rgba(32,217,255,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.78rem; font-weight: 800; color: var(--cyan);
+    }
+    .step-content .step-title { font-size: 0.88rem; font-weight: 700; margin-bottom: 2px; }
+    .step-content .step-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* ── TEST RESULTS ── */
+    .test-result {
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--glass-border); padding: 10px 0;
+    }
+    .test-result:last-child { border-bottom: none; }
+    .test-result .test-name { font-size: 0.85rem; font-weight: 600; }
+    .test-result .test-info { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+    .badge-pass { background: rgba(74,222,128,0.12); border: 1px solid rgba(74,222,128,0.3); color: #86efac; border-radius: 6px; padding: 3px 10px; font-size: 0.72rem; font-weight: 700; }
+    .badge-warn { background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.3); color: #fde68a; border-radius: 6px; padding: 3px 10px; font-size: 0.72rem; font-weight: 700; }
+
+    /* ── REFERENCES ── */
+    .ref-item { border-left: 3px solid rgba(139,92,246,0.4); padding: 8px 14px; margin-bottom: 10px; font-size: 0.83rem; color: var(--text-muted); line-height: 1.6; }
+    .ref-item strong { color: var(--text-primary); }
+
+    /* ── FUTURE CARD ── */
+    .future-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      border: 1px solid var(--glass-border); border-radius: 10px; padding: 1rem 1.2rem;
+      margin-bottom: 10px; background: rgba(255,255,255,0.02);
+      transition: all 0.2s;
+    }
+    .future-item:hover { border-color: rgba(139,92,246,0.3); transform: translateX(4px); }
+    .future-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .future-title { font-size: 0.88rem; font-weight: 700; margin-bottom: 2px; }
+    .future-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* ── CONCLUSION ── */
+    .conclusion-box {
+      border: 1px solid rgba(32,217,255,0.25);
+      background: linear-gradient(135deg, rgba(32,217,255,0.05), rgba(139,92,246,0.05));
+      border-radius: 16px; padding: 2.5rem; text-align: center;
+    }
+    .conclusion-box h2 { font-size: 2rem; font-weight: 900; letter-spacing: -1px; margin-bottom: 1rem; }
+    .conclusion-box p { color: var(--text-muted); line-height: 1.8; max-width: 700px; margin: 0 auto 1.5rem; font-size: 0.95rem; }
+    .pillars-final { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem; }
+    .pillars-final span { font-weight: 700; font-size: 0.85rem; color: var(--cyan); border: 1px solid rgba(32,217,255,0.25); border-radius: 8px; padding: 6px 16px; }
+
+    /* ── CONTRIBUTION RING ── */
+    .contrib-rings { display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center; margin: 2rem 0; }
+    .contrib-member { text-align: center; }
+    .ring-wrap { position: relative; width: 100px; height: 100px; margin: 0 auto 10px; }
+    .ring-wrap svg { transform: rotate(-90deg); }
+    .ring-wrap .ring-pct { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 900; }
+    .contrib-member .mem-name { font-size: 0.82rem; font-weight: 700; }
+    .contrib-member .mem-role { font-size: 0.72rem; color: var(--text-muted); }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-brand">
+    <div class="icon">🔐</div>
+    <span>PrivyPrint</span>
+  </div>
+  <ul class="nav-tabs" id="navTabs">
+    <li><button onclick="showSection('s0')" class="active">Overview</button></li>
+    <li><button onclick="showSection('s1')">1 Problem</button></li>
+    <li><button onclick="showSection('s2')">2 Technical</button></li>
+    <li><button onclick="showSection('s3')">3 UI/UX</button></li>
+    <li><button onclick="showSection('s4')">4 Team</button></li>
+    <li><button onclick="showSection('s5')">5 Results</button></li>
+  </ul>
+</nav>
+
+<div class="container">
+
+<!-- ════════════════════ SECTION 0: OVERVIEW / HERO ════════════════════ -->
+<div class="section active" id="s0">
+  <div class="hero">
+    <div class="badge">🎓 Final Year Project · External Examiner Presentation · 2026</div>
+    <h1>Privy<span class="grad">Print</span></h1>
+    <p>A Zero-PII, Blockchain-Native Architecture for the Secure Exchange of Confidential Physical Documents using Web 3.0 Technologies.</p>
+    <div class="hero-tags">
+      <span class="tag">AES-256 Encryption</span>
+      <span class="tag">Smart Contracts (Solidity)</span>
+      <span class="tag">IPFS Decentralized Storage</span>
+      <span class="tag">MetaMask Wallet Integration</span>
+      <span class="tag">Next.js 15 · TypeScript</span>
+      <span class="tag">Polygon Amoy Testnet</span>
+      <span class="tag">Glassmorphism UI</span>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:1.5rem">
+    <div class="stat-card"><div class="value">Zero</div><div class="label">PII Stored on Server</div></div>
+    <div class="stat-card"><div class="value">AES-256</div><div class="label">Client-Side Encryption</div></div>
+    <div class="stat-card"><div class="value">&lt;1s</div><div class="label">5MB PDF Encryption Time</div></div>
+    <div class="stat-card"><div class="value">EVM</div><div class="label">Smart Contract Network</div></div>
+    <div class="stat-card"><div class="value">IPFS</div><div class="label">Decentralized Storage</div></div>
+    <div class="stat-card"><div class="value">100%</div><div class="label">End-to-End Encrypted</div></div>
+  </div>
+
+  <div class="glass-card">
+    <h2><div class="icon-badge">📋</div> Project Abstract</h2>
+    <p style="margin-top:0.8rem">PrivyPrint is a decentralized application (dApp) designed to eliminate the privacy and security vulnerabilities inherent in the physical document printing pipeline. By leveraging AES-256 client-side encryption, IPFS for decentralized ciphertext storage, and a Solidity smart contract for on-chain access governance, PrivyPrint ensures that sensitive documents are never stored in plaintext on any central server, mail client, or print shop hard drive. The document remains completely encrypted from sender to paper — only the designated print shop's wallet can decrypt it, and only ephemerally in browser memory during the print operation.</p>
+    <p style="margin-top:0.8rem">Built with Next.js 15, Ethers.js v6, and a premium glassmorphic UI, PrivyPrint bridges the gap between digital-to-physical media security for a modern, privacy-conscious audience.</p>
+  </div>
+
+  <div class="glass-card" style="text-align:center;">
+    <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1rem">Navigate to any section using the tabs above</p>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center">
+      <button onclick="showSection('s1')" style="background:rgba(32,217,255,0.1);border:1px solid rgba(32,217,255,0.3);color:var(--cyan);padding:10px 20px;border-radius:8px;cursor:pointer;font-family:inherit;font-weight:700;font-size:0.82rem">01 Problem Statement →</button>
+      <button onclick="showSection('s2')" style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);color:#c4b5fd;padding:10px 20px;border-radius:8px;cursor:pointer;font-family:inherit;font-weight:700;font-size:0.82rem">02 Technical Design →</button>
+      <button onclick="showSection('s3')" style="background:rgba(32,217,255,0.1);border:1px solid rgba(32,217,255,0.3);color:var(--cyan);padding:10px 20px;border-radius:8px;cursor:pointer;font-family:inherit;font-weight:700;font-size:0.82rem">03 UI/UX Design →</button>
+      <button onclick="showSection('s4')" style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);color:#c4b5fd;padding:10px 20px;border-radius:8px;cursor:pointer;font-family:inherit;font-weight:700;font-size:0.82rem">04 Team →</button>
+      <button onclick="showSection('s5')" style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);color:#86efac;padding:10px 20px;border-radius:8px;cursor:pointer;font-family:inherit;font-weight:700;font-size:0.82rem">05 Results →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ SECTION 1: PROBLEM ════════════════════ -->
+<div class="section" id="s1">
+  <div class="section-header">
+    <div class="num">Section 01</div>
+    <h2>Problem Definition & Ethical Framework</h2>
+    <p>Why secure printing matters, who it affects, what's broken, and how Web 3.0 can fix it.</p>
+  </div>
+
+  <div class="glass-card">
+    <h2><div class="icon-badge">🎯</div> Detailed Problem Statement</h2>
+    <p style="margin-top:0.8rem;font-style:italic;border-left:3px solid var(--cyan);padding-left:1rem;color:var(--text-primary)">"There currently exists no standardized, secure, and decentralized method for transmitting highly confidential digital documents to third-party physical printing facilities without exposing document contents in plaintext to intermediate transit networks, centralized database hosting providers, or persistent storage drives at the target print location."</p>
+    <h3>Why the Problem is Important</h3>
+    <ul>
+      <li><strong>Identity Theft:</strong> Bank statements, tax filings, government IDs, and medical records are routinely printed. Files left on print shop hard drives are high-value targets for data harvesting.</li>
+      <li><strong>Corporate Espionage:</strong> Financial audits, patent drafts, merger agreements, and board resolutions are vulnerable to insider leaks at commercial print terminals.</li>
+      <li><strong>Legal Compliance:</strong> Regulations like GDPR (Europe), HIPAA (US), and DPDP (India) mandate PII protection throughout its entire lifecycle. Accumulating plaintext files violates these frameworks.</li>
+      <li><strong>No Revocation Mechanism:</strong> Once a document is emailed or uploaded, senders cannot reliably "un-send" or delete it from a third-party's system.</li>
+    </ul>
+  </div>
+
+  <div class="grid-2">
+    <div class="glass-card">
+      <h2><div class="icon-badge">👥</div> Target Users</h2>
+      <h3>Individual Senders</h3>
+      <p>Privacy-conscious consumers printing personal documents: medical records, legal agreements, tax filings, bank statements.</p>
+      <h3>Enterprise Senders</h3>
+      <p>Organizations requiring secure external printing of proprietary data and confidential client files.</p>
+      <h3>Print Shop Operators</h3>
+      <p>Print business owners wanting to offer a verified, secure service without taking on the liability of storing sensitive client files.</p>
+    </div>
+
+    <div class="glass-card">
+      <h2><div class="icon-badge">⚠️</div> Existing Limitations</h2>
+      <ul style="margin-top:0.8rem">
+        <li><strong>Cloud Storage (Drive/Dropbox):</strong> Files are decrypted on provider servers. Permissions must be manually managed.</li>
+        <li><strong>Encrypted Email (ProtonMail):</strong> Not optimized for commercial print terminals. Operators still download plaintext PDFs to disk.</li>
+        <li><strong>SFTP / Managed File Transfer:</strong> Secures transit but stores plaintext at rest. No revocation or audit trail.</li>
+        <li><strong>DRM Clients:</strong> Require proprietary software installations. Not compatible with public print shops.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="glass-card">
+    <h2><div class="icon-badge">🌐</div> Web 3.0 Relevance & Decentralization</h2>
+    <div class="grid-2" style="margin-top:1rem">
+      <div>
+        <h3>Trustless Access Mediation</h3>
+        <p>Instead of trusting a centralized database to manage print permissions, a Solidity smart contract enforces access rules immutably on-chain.</p>
+        <h3>Cryptographic Sovereignty</h3>
+        <p>The document's AES key is wrapped specifically for the print shop's wallet address using asymmetric ECIES encryption.</p>
+      </div>
+      <div>
+        <h3>Immutable Audit Trail</h3>
+        <p>The blockchain logs job creations, cancellations, and completions. This audit trail cannot be modified by either party.</p>
+        <h3>Zero-PII Backend</h3>
+        <p>MongoDB caches only public directory information. IPFS stores only encrypted ciphertext that is cryptographically unreadable without the AES key.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass-card">
+    <h2><div class="icon-badge">⚖️</div> Ethical Concerns & Data Sovereignty</h2>
+    <div class="pillar-grid">
+      <div class="pillar">
+        <span class="emoji">🔒</span>
+        <div class="pillar-title">Privacy</div>
+        <div class="pillar-desc">Privacy is built into the core architecture. Documents are encrypted in the browser before touching the network.</div>
+      </div>
+      <div class="pillar">
+        <span class="emoji">🔍</span>
+        <div class="pillar-title">Transparency</div>
+        <div class="pillar-desc">All access rules and transaction histories are written to a public ledger that anyone can verify.</div>
+      </div>
+      <div class="pillar">
+        <span class="emoji">🛡️</span>
+        <div class="pillar-title">Security</div>
+        <div class="pillar-desc">AES-256 encryption and asymmetric key wrapping ensure zero-knowledge at the server layer.</div>
+      </div>
+      <div class="pillar">
+        <span class="emoji">🤝</span>
+        <div class="pillar-title">Trust</div>
+        <div class="pillar-desc">Trust is mathematically enforced by smart contract logic, not by blind reliance on a third party.</div>
+      </div>
+      <div class="pillar">
+        <span class="emoji">👤</span>
+        <div class="pillar-title">User Ownership</div>
+        <div class="pillar-desc">Senders retain absolute ownership. They can revoke access on-chain at any time before printing occurs.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ SECTION 2: TECHNICAL ════════════════════ -->
+<div class="section" id="s2">
+  <div class="section-header">
+    <div class="num">Section 02</div>
+    <h2>Complete Technical Architecture & Design</h2>
+    <p>Stack, smart contracts, encryption algorithms, IPFS, wallet integration, deployment, scalability, and limitations.</p>
+  </div>
+
+  <!-- Architecture Layers -->
+  <div class="glass-card">
+    <h2><div class="icon-badge">🏗️</div> System Architecture Layers</h2>
+    <div style="margin-top:1.2rem">
+      <div class="arch-row">
+        <div class="arch-layer" style="border-color:rgba(32,217,255,0.2)">
+          <div class="layer-name">🖥 Client / Presentation Layer</div>
+          <div class="components">
+            <span class="chip chip-cyan">Next.js 15 (App Router)</span>
+            <span class="chip chip-cyan">React 18</span>
+            <span class="chip chip-cyan">Framer Motion</span>
+            <span class="chip chip-cyan">Tailwind CSS</span>
+            <span class="chip chip-cyan">TypeScript 5</span>
+          </div>
+        </div>
+        <div class="arch-layer" style="border-color:rgba(139,92,246,0.2)">
+          <div class="layer-name">🔑 Identity & Auth Layer</div>
+          <div class="components">
+            <span class="chip chip-violet">MetaMask Wallet</span>
+            <span class="chip chip-violet">NextAuth.js</span>
+            <span class="chip chip-violet">eth_decrypt API</span>
+            <span class="chip chip-violet">Wallet Signatures</span>
+          </div>
+        </div>
+      </div>
+      <div class="arch-row">
+        <div class="arch-layer" style="border-color:rgba(74,222,128,0.2)">
+          <div class="layer-name">📦 Storage & IPFS Layer</div>
+          <div class="components">
+            <span class="chip chip-green">IPFS Network</span>
+            <span class="chip chip-green">Pinata SDK</span>
+            <span class="chip chip-green">Encrypted Ciphertext</span>
+            <span class="chip chip-green">CID (Content ID)</span>
+          </div>
+        </div>
+        <div class="arch-layer" style="border-color:rgba(251,191,36,0.2)">
+          <div class="layer-name">⛓ Blockchain / Access Layer</div>
+          <div class="components">
+            <span class="chip chip-amber">Solidity ^0.8.24</span>
+            <span class="chip chip-amber">Polygon Amoy / Ganache</span>
+            <span class="chip chip-amber">Ethers.js v6</span>
+            <span class="chip chip-amber">Hardhat</span>
+          </div>
+        </div>
+      </div>
+      <div class="arch-row">
+        <div class="arch-layer" style="border-color:rgba(139,92,246,0.2)">
+          <div class="layer-name">💾 Backend / API Layer</div>
+          <div class="components">
+            <span class="chip chip-violet">MongoDB Atlas</span>
+            <span class="chip chip-violet">Mongoose ODM</span>
+            <span class="chip chip-violet">Next.js API Routes</span>
+            <span class="chip chip-violet">bcryptjs</span>
+          </div>
+        </div>
+        <div class="arch-layer" style="border-color:rgba(32,217,255,0.2)">
+          <div class="layer-name">🔐 Cryptography Layer</div>
+          <div class="components">
+            <span class="chip chip-cyan">CryptoJS (AES-256)</span>
+            <span class="chip chip-cyan">x25519-xsalsa20</span>
+            <span class="chip chip-cyan">Blob URL Memory</span>
+            <span class="chip chip-cyan">SHA-256 CID</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Smart Contract -->
+  <div class="glass-card">
+    <h2><div class="icon-badge">⛓</div> Smart Contract: PrivyPrintAccessControl.sol</h2>
+    <p style="margin-top:0.6rem">Deployed on Polygon Amoy Testnet (chainId: 80002) and local Ganache (chainId: 1337). All access rules are immutable and verified on-chain.</p>
+    <h3>Core Data Structures</h3>
+    <div class="code-block">
+<span class="kw">enum</span> JobStatus { Pending, Completed, Revoked }
+
+<span class="kw">struct</span> PrintJob {
+    <span class="type">uint256</span> id;           <span class="cm">// Unique on-chain job ID</span>
+    <span class="type">string</span>  cid;          <span class="cm">// IPFS Content Identifier of encrypted file</span>
+    <span class="type">address</span> sender;       <span class="cm">// Wallet address of document owner</span>
+    <span class="type">address</span> receiver;     <span class="cm">// Wallet address of designated print shop</span>
+    <span class="type">uint256</span> expiry;       <span class="cm">// Unix timestamp of access expiration</span>
+    <span class="type">uint256</span> copies;       <span class="cm">// Number of copies requested</span>
+    <span class="type">string</span>  printType;    <span class="cm">// "Color" or "Black & White"</span>
+    <span class="type">string</span>  encryptedKey; <span class="cm">// AES key wrapped with shop's public key</span>
+    JobStatus status;      <span class="cm">// Current lifecycle state</span>
+}
+    </div>
+    <h3>Key Contract Functions</h3>
+    <div class="code-block">
+<span class="cm">// Print shop registers their wallet's public key on-chain</span>
+<span class="kw">function</span> <span class="fn">registerEncryptionKey</span>(<span class="type">string</span> publicKey) <span class="kw">external</span>;
+
+<span class="cm">// Sender creates a print job with encrypted payload reference</span>
+<span class="kw">function</span> <span class="fn">createPrintJob</span>(cid, receiver, expiry, copies, type, encryptedKey) → <span class="type">uint256</span>;
+
+<span class="cm">// Print shop confirms and marks job done (must be before expiry)</span>
+<span class="kw">function</span> <span class="fn">confirmPrint</span>(<span class="type">uint256</span> jobId) <span class="kw">external</span>;
+
+<span class="cm">// Sender revokes access before printing (instantly blocks shop)</span>
+<span class="kw">function</span> <span class="fn">revokeAccess</span>(<span class="type">uint256</span> jobId) <span class="kw">external</span>;
+    </div>
+  </div>
+
+  <!-- Encryption Algorithms -->
+  <div class="glass-card">
+    <h2><div class="icon-badge">🔐</div> Encryption Algorithms & Modules</h2>
+    <div class="grid-2" style="margin-top:1rem">
+      <div>
+        <h3>Symmetric File Encryption (AES-256-CBC)</h3>
+        <div class="code-block">
+<span class="cm">// lib/encryption.ts</span>
+<span class="kw">export async function</span> <span class="fn">encryptFile</span>(file, accessKey) {
+  <span class="kw">const</span> dataUrl = <span class="kw">await</span> fileToDataUrl(file);
+  <span class="kw">const</span> encrypted = CryptoJS.AES
+    .encrypt(dataUrl, accessKey).toString();
+  <span class="kw">return new</span> Blob([encrypted], { type: <span class="str">'text/plain'</span> });
+}
+        </div>
+      </div>
+      <div>
+        <h3>Asymmetric Key Wrapping (x25519-xsalsa20)</h3>
+        <div class="code-block">
+<span class="cm">// Encrypt AES key with shop's MetaMask public key</span>
+<span class="kw">export function</span> <span class="fn">encryptAccessKeyForReceiver</span>(
+  accessKey, receiverPublicKey
+) {
+  <span class="kw">const</span> encrypted = encrypt({
+    publicKey: receiverPublicKey,
+    data: accessKey,
+    version: <span class="str">'x25519-xsalsa20-poly1305'</span>
+  });
+  <span class="kw">return</span> <span class="str">`0x${Buffer.from(JSON.stringify(encrypted)).toString('hex')}`</span>;
+}
+        </div>
+      </div>
+    </div>
+    <h3>Direct Print — In-Memory Revocation</h3>
+    <div class="code-block">
+<span class="cm">// In PrintInterface.tsx — Document NEVER saved to disk</span>
+<span class="kw">const</span> blobUrl = URL.createObjectURL(decryptedBlob);  <span class="cm">// RAM only</span>
+iframe.src = <span class="str">`${blobUrl}#toolbar=0&navpanes=0`</span>;  <span class="cm">// Sandboxed</span>
+iframe.contentWindow.<span class="fn">print</span>();                       <span class="cm">// Trigger OS print</span>
+URL.<span class="fn">revokeObjectURL</span>(blobUrl);                      <span class="cm">// PURGE from RAM</span>
+    </div>
+  </div>
+
+  <!-- Workflow -->
+  <div class="glass-card">
+    <h2><div class="icon-badge">🔄</div> System Workflow (Sequence of Operations)</h2>
+    <div style="margin-top:1rem">
+      <div class="flow">
+        <div class="flow-step"><div class="flow-circle">📄</div><div class="flow-label">Select PDF</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="flow-circle">🔑</div><div class="flow-label">Generate AES Key</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="flow-circle">🔒</div><div class="flow-label">Encrypt File (Browser)</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="flow-circle">📡</div><div class="flow-label">Upload to IPFS</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="flow-circle">🦊</div><div class="flow-label">Wrap Key via MetaMask</div></div>
+      </div>
+      <div class="flow">
+        <div class="flow-step"><div class="flow-circle">⛓</div><div class="flow-label">Register Job On-Chain</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="flow-circle">🖨</div><div class="flow-label">Shop Views Queue</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="flow-circle">🔓</div><div class="flow-label">Decrypt Key via MetaMask</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="flow-circle">🖼</div><div class="flow-label">Decrypt in RAM</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="flow-circle">✅</div><div class="flow-label">Print & Confirm</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Deployment & Scalability & Limits -->
+  <div class="grid-2">
+    <div class="glass-card">
+      <h2><div class="icon-badge">🚀</div> Deployment Details</h2>
+      <h3>Development Network</h3>
+      <p>Local Ganache CLI at <code style="color:var(--cyan)">http://127.0.0.1:7545</code>, chainId 1337.</p>
+      <h3>Testnet Deployment</h3>
+      <p>Polygon Amoy Testnet (chainId 80002). Low gas fees with full EVM compatibility.</p>
+      <h3>Storage</h3>
+      <p>IPFS via Pinata SDK. Files are pinned on job creation and unpinned on completion.</p>
+      <h3>Frontend</h3>
+      <p>Next.js deployed on Vercel with API routes for IPFS proxy and MongoDB connection handling.</p>
+    </div>
+    <div class="glass-card">
+      <h2><div class="icon-badge">⚡</div> Scalability & Security</h2>
+      <h3>Scalability</h3>
+      <ul>
+        <li>Client-side encryption offloads compute from servers entirely.</li>
+        <li>IPFS provides horizontally scalable decentralized storage.</li>
+        <li>Smart contract interactions require minimal on-chain state, keeping gas costs low.</li>
+      </ul>
+      <h3>Security Controls</h3>
+      <ul>
+        <li>HTTPS, CSP headers, iframe sandboxing.</li>
+        <li>Automatic Blob URL revocation after print.</li>
+        <li>bcrypt-hashed passwords (10 salt rounds).</li>
+        <li>JWT session tokens via NextAuth.js.</li>
+      </ul>
+      <h3>Limitations</h3>
+      <ul>
+        <li>PDFs &gt; 50MB may exceed browser memory limits during client-side encryption.</li>
+        <li>Requires MetaMask browser extension.</li>
+        <li>Depends on IPFS gateway availability (Pinata).</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ SECTION 3: UI/UX ════════════════════ -->
+<div class="section" id="s3">
+  <div class="section-header">
+    <div class="num">Section 03</div>
+    <h2>Interface Design & User Experience</h2>
+    <p>User flows, navigation, visual design, responsiveness, accessibility, and Web3 abstraction.</p>
+  </div>
+
+  <!-- Sender Flow -->
+  <div class="glass-card">
+    <h2><div class="icon-badge">📤</div> Sender: End-to-End User Interaction Flow</h2>
+    <div class="user-steps" style="margin-top:1rem">
+      <div class="user-step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Visit Landing Page & Connect Wallet</div><div class="step-desc">User visits PrivyPrint, reads the security overview, and clicks "Connect MetaMask". MetaMask prompts for wallet approval.</div></div></div>
+      <div class="user-step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Register / Sign In</div><div class="step-desc">New users fill out the Registration form, selecting the "Document Sender" role. Existing users log in with their credentials. The system redirects to the correct role dashboard automatically.</div></div></div>
+      <div class="user-step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Browse Print Shop Directory</div><div class="step-desc">The Sender Dashboard displays a searchable directory of verified print shops with location, rating, specialty, and shortened wallet address.</div></div></div>
+      <div class="user-step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Upload PDF & Configure Job</div><div class="step-desc">The sender drags or browses for a PDF file. They configure print type (Color/B&W), number of copies, and job expiry duration using the settings panel.</div></div></div>
+      <div class="user-step"><div class="step-num">5</div><div class="step-content"><div class="step-title">Encrypt & Submit via MetaMask</div><div class="step-desc">The browser encrypts the file client-side and uploads the ciphertext to IPFS. MetaMask prompts the user to sign a blockchain transaction to register the print job on-chain.</div></div></div>
+      <div class="user-step"><div class="step-num">6</div><div class="step-content"><div class="step-title">Track & Manage Print Jobs</div><div class="step-desc">The dashboard displays active jobs with real-time statuses (Pending, Completed, Revoked) and allows the sender to revoke access at any time before printing.</div></div></div>
+    </div>
+  </div>
+
+  <!-- Shop Flow -->
+  <div class="glass-card">
+    <h2><div class="icon-badge">🖨</div> Print Shop: Interaction & Printing Workflow</h2>
+    <div class="user-steps" style="margin-top:1rem">
+      <div class="user-step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Register as Print Shop & Set Up Wallet</div><div class="step-desc">The shop operator registers with the "Printer Shop" role and visits Settings to register their MetaMask encryption public key on the smart contract.</div></div></div>
+      <div class="user-step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Monitor Incoming Job Queue</div><div class="step-desc">The Print Shop Dashboard displays a real-time queue of pending jobs, showing sender address, document size, copies, print type, and expiry countdown.</div></div></div>
+      <div class="user-step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Decrypt via MetaMask</div><div class="step-desc">The shop clicks "Print Job". MetaMask prompts for their signature to decrypt the wrapped AES key. The private key never leaves MetaMask's vault.</div></div></div>
+      <div class="user-step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Secure Preview & Direct Print</div><div class="step-desc">The document is decrypted in RAM and rendered in a sandboxed iframe with toolbars hidden. Only the OS print dialog is accessible — no download or save buttons.</div></div></div>
+      <div class="user-step"><div class="step-num">5</div><div class="step-content"><div class="step-title">Confirm Print On-Chain</div><div class="step-desc">After printing, the shop clicks "Confirm Print". A blockchain transaction marks the job as Completed, and the Blob URL is revoked to clear RAM.</div></div></div>
+    </div>
+  </div>
+
+  <!-- Design Aesthetics -->
+  <div class="glass-card">
+    <h2><div class="icon-badge">🎨</div> Visual Design System — Glassmorphism</h2>
+    <div class="grid-2" style="margin-top:1rem">
+      <div>
+        <h3>Color Palette</h3>
+        <div style="display:flex; flex-direction:column; gap:8px; margin-top:0.6rem">
+          <div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:6px;background:#060711;border:1px solid #333"></div><span style="font-size:0.82rem; color:var(--text-muted)"><strong style="color:white">#060711</strong> — Void Background</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:6px;background:#20d9ff"></div><span style="font-size:0.82rem; color:var(--text-muted)"><strong style="color:white">#20D9FF</strong> — Cyan Glow (Primary)</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:6px;background:#8b5cf6"></div><span style="font-size:0.82rem; color:var(--text-muted)"><strong style="color:white">#8B5CF6</strong> — Violet (Secondary)</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:6px;background:rgba(13,18,36,0.72);border:1px solid rgba(255,255,255,0.1)"></div><span style="font-size:0.82rem; color:var(--text-muted)"><strong style="color:white">Glass Panel</strong> — Backdrop Blur 24px</span></div>
+        </div>
+        <h3>Typography</h3>
+        <p>Inter (UI Text) — JetBrains Mono (Code & Addresses). Font weights from 300–900 used to establish visual hierarchy.</p>
+      </div>
+      <div>
+        <h3>Glass Panel CSS</h3>
+        <div class="code-block">
+.glass {
+  border: <span class="num">1px</span> solid rgba(<span class="num">255,255,255,0.1</span>);
+  background: rgba(<span class="num">13,18,36,0.72</span>);
+  backdrop-filter: blur(<span class="num">24px</span>);
+  box-shadow: <span class="num">0 8px 32px</span> rgba(<span class="num">0,0,0,0.37</span>);
+  border-radius: <span class="num">16px</span>;
+}
+
+<span class="cm">/* Neon text glow effect */</span>
+.text-glow-cyan {
+  text-shadow: <span class="num">0 0 15px</span> rgba(<span class="num">32,217,255,0.5</span>);
+}
+        </div>
+        <h3>Micro-Animations (Framer Motion)</h3>
+        <ul>
+          <li>Page transitions: fade + 10px vertical slide</li>
+          <li>Card hover: -2px translateY + border glow</li>
+          <li>Button hover: gradient shift with shadow intensification</li>
+          <li>Form validation: animated error badge fade-in</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Responsiveness & Accessibility -->
+  <div class="glass-card">
+    <h2><div class="icon-badge">📱</div> Responsiveness, Accessibility & Web3 Abstraction</h2>
+    <div class="grid-2" style="margin-top:1rem">
+      <div>
+        <h3>Responsive Layout</h3>
+        <ul>
+          <li>Desktop (≥1280px): Full sidebar + main content two-column layout.</li>
+          <li>Tablet (768–1280px): Collapsible sidebar with hamburger icon.</li>
+          <li>Mobile (&lt;768px): Single column; navigation collapses into bottom tab bar.</li>
+        </ul>
+        <h3>Accessibility (WCAG AA)</h3>
+        <ul>
+          <li>Semantic HTML5: &lt;nav&gt;, &lt;main&gt;, &lt;article&gt;, &lt;header&gt; used throughout.</li>
+          <li>Color contrast ratios meet WCAG AA minimum (4.5:1).</li>
+          <li>Keyboard navigable interactive elements with visible focus states.</li>
+          <li>ARIA roles on dynamic components (modals, status badges).</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Abstracting Web3 Complexity</h3>
+        <ul>
+          <li>Transaction hashes are never shown to users; only human-readable status labels (Encrypting…, Uploading to IPFS…, Confirming on Blockchain…).</li>
+          <li>Public encryption key registration happens automatically when users visit the Settings page; users don't interact with raw keys.</li>
+          <li>Job statuses from smart contract enum values are translated into color-coded badges.</li>
+          <li>The MetaMask popup is triggered only at two natural decision points: job submission and decryption.</li>
+        </ul>
+        <h3>Ease of Use</h3>
+        <ul>
+          <li>Role-based redirection: users land directly on their dashboard after login.</li>
+          <li>Drag-and-drop file upload zone with file size preview.</li>
+          <li>One-click revocation with instant on-chain confirmation.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ SECTION 4: TEAM ════════════════════ -->
+<div class="section" id="s4">
+  <div class="section-header">
+    <div class="num">Section 04</div>
+    <h2>Team Collaboration & Contribution Matrix</h2>
+    <p>Roles, responsibilities, individual contributions, weekly progress, and development timeline.</p>
+  </div>
+
+  <!-- Contribution Rings -->
+  <div class="glass-card">
+    <h2><div class="icon-badge">👥</div> Individual Contribution Overview</h2>
+    <div class="contrib-rings" id="rings">
+      <div class="contrib-member">
+        <div class="ring-wrap">
+          <svg width="100" height="100" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8"/>
+            <circle cx="50" cy="50" r="42" fill="none" stroke="url(#g1)" stroke-width="8" stroke-dasharray="263.9" stroke-dashoffset="74" stroke-linecap="round"/>
+            <defs><linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#20d9ff"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient></defs>
+          </svg>
+          <div class="ring-pct" style="background:linear-gradient(135deg,#20d9ff,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent">28%</div>
+        </div>
+        <div class="mem-name">S Rohith</div>
+        <div class="mem-role">Lead Developer</div>
+      </div>
+      <div class="contrib-member">
+        <div class="ring-wrap">
+          <svg width="100" height="100" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8"/>
+            <circle cx="50" cy="50" r="42" fill="none" stroke="url(#g2)" stroke-width="8" stroke-dasharray="263.9" stroke-dashoffset="83" stroke-linecap="round"/>
+            <defs><linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#20d9ff"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient></defs>
+          </svg>
+          <div class="ring-pct" style="background:linear-gradient(135deg,#20d9ff,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent">26%</div>
+        </div>
+        <div class="mem-name">Dadapir Nadaf</div>
+        <div class="mem-role">UI/UX Designer</div>
+      </div>
+      <div class="contrib-member">
+        <div class="ring-wrap">
+          <svg width="100" height="100" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8"/>
+            <circle cx="50" cy="50" r="42" fill="none" stroke="url(#g3)" stroke-width="8" stroke-dasharray="263.9" stroke-dashoffset="96" stroke-linecap="round"/>
+            <defs><linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#20d9ff"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient></defs>
+          </svg>
+          <div class="ring-pct" style="background:linear-gradient(135deg,#20d9ff,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent">24%</div>
+        </div>
+        <div class="mem-name">O V Yogeswar Reddy</div>
+        <div class="mem-role">Security Engineer</div>
+      </div>
+      <div class="contrib-member">
+        <div class="ring-wrap">
+          <svg width="100" height="100" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8"/>
+            <circle cx="50" cy="50" r="42" fill="none" stroke="url(#g4)" stroke-width="8" stroke-dasharray="263.9" stroke-dashoffset="106" stroke-linecap="round"/>
+            <defs><linearGradient id="g4" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#20d9ff"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient></defs>
+          </svg>
+          <div class="ring-pct" style="background:linear-gradient(135deg,#20d9ff,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent">22%</div>
+        </div>
+        <div class="mem-name">Aman Sharma</div>
+        <div class="mem-role">Tech Writer</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contribution Table -->
+  <div class="glass-card">
+    <h2><div class="icon-badge">📊</div> Detailed Role & Contribution Table</h2>
+    <table class="fancy-table" style="margin-top:1rem">
+      <thead>
+        <tr>
+          <th>Member</th><th>Role</th><th>Coding</th><th>Design</th><th>Testing</th><th>Docs</th><th>Research</th><th>Deployment</th><th>%</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="member-name">S Rohith</td>
+          <td>Lead Developer</td>
+          <td>Smart contracts, Ethers.js integration, Next.js API routes, IPFS proxy, NextAuth setup</td>
+          <td>Component architecture</td>
+          <td>Contract unit tests, integration tests</td>
+          <td>Code comments, README</td>
+          <td>Blockchain architecture</td>
+          <td>Ganache deploy</td>
+          <td><strong style="color:var(--cyan)">28%</strong></td>
+        </tr>
+        <tr>
+          <td class="member-name">Dadapir Nadaf</td>
+          <td>UI/UX Designer</td>
+          <td>Framer Motion animations, Tailwind config, responsive layouts, glassmorphic components</td>
+          <td>Full visual system, wireframes, glassmorphism</td>
+          <td>UI responsiveness, cross-browser testing</td>
+          <td>Design specifications</td>
+          <td>UX best practices survey</td>
+          <td>Vercel frontend deploy</td>
+          <td><strong style="color:var(--cyan)">26%</strong></td>
+        </tr>
+        <tr>
+          <td class="member-name">O v Yogeswar Reddy</td>
+          <td>Security Engineer</td>
+          <td>AES-256 encryption module, MetaMask key wrapping, secure iframe logic, Blob URL lifecycle</td>
+          <td>Security UI indicators</td>
+          <td>Security audit, penetration test simulations</td>
+          <td>Security model documentation</td>
+          <td>Cryptographic algorithm research</td>
+          <td>Environment & secret management</td>
+          <td><strong style="color:var(--cyan)">24%</strong></td>
+        </tr>
+        <tr>
+          <td class="member-name">Aman Sharma</td>
+          <td>Technical Writer</td>
+          <td>MongoDB schema, registration API, user flow pages</td>
+          <td>Presentation slides</td>
+          <td>User acceptance testing, QA</td>
+          <td>Full project report, references</td>
+          <td>Literature survey</td>
+          <td>Documentation delivery</td>
+          <td><strong style="color:var(--cyan)">22%</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Progress Bars -->
+  <div class="glass-card">
+    <h2><div class="icon-badge">📈</div> Area-wise Team Contribution Breakdown</h2>
+    <div style="margin-top:1rem">
+      <div class="progress-wrap"><div class="progress-label"><span>Smart Contract & Blockchain</span><span style="color:var(--cyan)">Member 1</span></div><div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div></div>
+      <div class="progress-wrap"><div class="progress-label"><span>Frontend UI & Animations</span><span style="color:var(--cyan)">Member 2</span></div><div class="progress-bar"><div class="progress-fill" style="width:85%"></div></div></div>
+      <div class="progress-wrap"><div class="progress-label"><span>Encryption & Security Modules</span><span style="color:var(--cyan)">Member 3</span></div><div class="progress-bar"><div class="progress-fill" style="width:75%"></div></div></div>
+      <div class="progress-wrap"><div class="progress-label"><span>Documentation & Research</span><span style="color:var(--cyan)">Member 4</span></div><div class="progress-bar"><div class="progress-fill" style="width:90%"></div></div></div>
+      <div class="progress-wrap"><div class="progress-label"><span>IPFS Integration & API Routes</span><span style="color:var(--cyan)">Member 1</span></div><div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div></div>
+      <div class="progress-wrap"><div class="progress-label"><span>Testing & QA</span><span style="color:var(--cyan)">All Members</span></div><div class="progress-bar"><div class="progress-fill" style="width:65%"></div></div></div>
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="glass-card">
+    <h2><div class="icon-badge">📅</div> 8-Week Development Timeline</h2>
+    <div class="timeline" style="margin-top:1.5rem">
+      <div class="timeline-item">
+        <div class="week">Week 1 – 2</div>
+        <div class="task">Research, Planning & System Design</div>
+        <div class="desc">Literature survey of existing security tools. Defined architecture, selected tech stack, wrote functional requirements. All 4 members contributed equally.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="week">Week 3</div>
+        <div class="task">Smart Contract Development (M1)</div>
+        <div class="desc">Wrote PrivyPrintAccessControl.sol. Deployed on local Hardhat node. Tested createPrintJob, confirmPrint, revokeAccess functions.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="week">Week 4</div>
+        <div class="task">Cryptographic Core (M3)</div>
+        <div class="desc">Implemented lib/encryption.ts with AES-256-CBC. Integrated MetaMask's asymmetric key wrapping (x25519-xsalsa20-poly1305).</div>
+      </div>
+      <div class="timeline-item">
+        <div class="week">Week 5</div>
+        <div class="task">UI/UX Implementation (M2)</div>
+        <div class="desc">Developed glassmorphic dashboards, landing page, login/register pages. Configured Tailwind design tokens and Framer Motion animations.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="week">Week 6</div>
+        <div class="task">Backend & Database Integration (M1, M4)</div>
+        <div class="desc">Connected MongoDB Atlas, built API routes for registration and user queries. Set up Pinata IPFS proxy API route (app/api/upload).</div>
+      </div>
+      <div class="timeline-item">
+        <div class="week">Week 7</div>
+        <div class="task">Direct Print Security & PrintInterface (M3)</div>
+        <div class="desc">Built the sandboxed iframe print component with Blob URL lifecycle management and memory revocation after printing.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="week">Week 8</div>
+        <div class="task">Testing, Deployment & Documentation (All)</div>
+        <div class="desc">Deployed to Polygon Amoy Testnet. Conducted security tests. Member 4 completed final project report, presentation, and viva prep.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ SECTION 5: RESULTS ════════════════════ -->
+<div class="section" id="s5">
+  <div class="section-header">
+    <div class="num">Section 05</div>
+    <h2>Testing, References, Conclusion & Future Scope</h2>
+  </div>
+
+  <!-- Testing Results -->
+  <div class="glass-card">
+    <h2><div class="icon-badge">🧪</div> Testing & Validation Results</h2>
+    <h3>Smart Contract Testing (Hardhat)</h3>
+    <div style="margin-top:0.6rem">
+      <div class="test-result"><div><div class="test-name">createPrintJob() — Valid parameters</div><div class="test-info">Emits PrintJobCreated event, returns incremented job ID</div></div><span class="badge-pass">✓ PASS</span></div>
+      <div class="test-result"><div><div class="test-name">confirmPrint() — After expiry</div><div class="test-info">Transaction reverts with "PrivyPrint: access expired"</div></div><span class="badge-pass">✓ PASS</span></div>
+      <div class="test-result"><div><div class="test-name">revokeAccess() — By non-sender</div><div class="test-info">Transaction reverts with "PrivyPrint: only sender"</div></div><span class="badge-pass">✓ PASS</span></div>
+      <div class="test-result"><div><div class="test-name">registerEncryptionKey() — Empty key</div><div class="test-info">Reverts with "PrivyPrint: empty public key"</div></div><span class="badge-pass">✓ PASS</span></div>
+    </div>
+    <h3>Performance Benchmarks</h3>
+    <div>
+      <div class="test-result"><div><div class="test-name">5MB PDF Encryption</div><div class="test-info">AES-256 client-side encryption time</div></div><span class="badge-pass">760ms</span></div>
+      <div class="test-result"><div><div class="test-name">20MB PDF Encryption</div><div class="test-info">AES-256 client-side encryption time</div></div><span class="badge-pass">2.1s</span></div>
+      <div class="test-result"><div><div class="test-name">IPFS Upload (5MB)</div><div class="test-info">Pinata Gateway pinning time</div></div><span class="badge-pass">1.2s</span></div>
+      <div class="test-result"><div><div class="test-name">Blockchain Latency (Ganache)</div><div class="test-info">Local transaction confirmation</div></div><span class="badge-pass">&lt;1s</span></div>
+      <div class="test-result"><div><div class="test-name">Blockchain Latency (Polygon Amoy)</div><div class="test-info">Testnet transaction confirmation</div></div><span class="badge-warn">~12s avg</span></div>
+    </div>
+    <h3>Security Audit</h3>
+    <div>
+      <div class="test-result"><div><div class="test-name">MITM Packet Capture Attack</div><div class="test-info">Network traffic captured only encrypted ciphertext blobs</div></div><span class="badge-pass">Protected</span></div>
+      <div class="test-result"><div><div class="test-name">Database Extraction Simulation</div><div class="test-info">MongoDB contains only hashed passwords and public profiles</div></div><span class="badge-pass">Protected</span></div>
+      <div class="test-result"><div><div class="test-name">IPFS Direct Access</div><div class="test-info">CID content is encrypted AES ciphertext — unreadable</div></div><span class="badge-pass">Protected</span></div>
+      <div class="test-result"><div><div class="test-name">Unauthorized Print Attempt</div><div class="test-info">Smart contract rejects non-receiver wallets</div></div><span class="badge-pass">Blocked</span></div>
+    </div>
+  </div>
+
+  <!-- References -->
+  <div class="glass-card">
+    <h2><div class="icon-badge">📚</div> Academic & Technology References</h2>
+    <div style="margin-top:1rem">
+      <div class="ref-item"><strong>[1] Nakamoto, S. (2008).</strong> Bitcoin: A Peer-to-Peer Electronic Cash System. bitcoin.org/bitcoin.pdf</div>
+      <div class="ref-item"><strong>[2] Buterin, V. (2014).</strong> A Next-Generation Smart Contract and Decentralized Application Platform. Ethereum White Paper.</div>
+      <div class="ref-item"><strong>[3] Rescorla, E. (2018).</strong> The Transport Layer Security (TLS) Protocol Version 1.3. RFC 8446, IETF.</div>
+      <div class="ref-item"><strong>[4] NIST. (2001).</strong> Advanced Encryption Standard (AES). FIPS Publication 197.</div>
+      <div class="ref-item"><strong>[5] Benet, J. (2014).</strong> IPFS — Content Addressed, Versioned, P2P File System. arXiv:1407.3561.</div>
+      <div class="ref-item"><strong>[6] MetaMask Development Team. (2026).</strong> MetaMask Developer Documentation — eth_decrypt and eth_getEncryptionPublicKey API. docs.metamask.io</div>
+      <div class="ref-item"><strong>[7] Pinata Team. (2026).</strong> Pinata IPFS Pinning Service API. docs.pinata.cloud</div>
+      <div class="ref-item"><strong>[8] Vercel / Next.js. (2026).</strong> Next.js 15 Documentation — App Router and Server Components. nextjs.org/docs</div>
+      <div class="ref-item"><strong>[9] Ethereum Foundation. (2026).</strong> Ethers.js v6 — A Complete Ethereum Library. docs.ethers.org</div>
+      <div class="ref-item"><strong>[10] Hardhat Team. (2026).</strong> Hardhat: Ethereum Development Environment. hardhat.org</div>
+    </div>
+  </div>
+
+  <!-- Future Scope -->
+  <div class="glass-card">
+    <h2><div class="icon-badge">🔭</div> Future Scope & Extended Roadmap</h2>
+    <div style="margin-top:1rem">
+      <div class="future-item"><div class="future-icon">✍️</div><div><div class="future-title">Multi-Signature Corporate Approvals</div><div class="future-desc">Enable multi-sig print job creation requiring sign-off from multiple managers before a print shop can access the document.</div></div></div>
+      <div class="future-item"><div class="future-icon">🕵️</div><div><div class="future-title">Zero-Knowledge Proof (ZKP) Verification</div><div class="future-desc">Use ZKPs to verify print shop capabilities (color, paper size, resolution) without revealing the shop's identity or equipment details.</div></div></div>
+      <div class="future-item"><div class="future-icon">🔑</div><div><div class="future-title">Hardware Security Token Support</div><div class="future-desc">Extend key management to hardware wallets (Ledger, YubiKey) for enterprise-grade private key isolation in high-security environments.</div></div></div>
+      <div class="future-item"><div class="future-icon">📱</div><div><div class="future-title">Mobile App (React Native)</div><div class="future-desc">Build a cross-platform mobile client that allows senders to upload and authorize print jobs directly from their smartphones.</div></div></div>
+      <div class="future-item"><div class="future-icon">⛓</div><div><div class="future-title">Multi-Chain Deployment</div><div class="future-desc">Support multiple EVM-compatible chains (Ethereum, Optimism, Base) allowing users to pay gas with their preferred token.</div></div></div>
+      <div class="future-item"><div class="future-icon">🤖</div><div><div class="future-title">AI-Powered Document Classification</div><div class="future-desc">Integrate on-device ML models to automatically classify sensitivity levels and recommend appropriate encryption and expiry settings.</div></div></div>
+    </div>
+  </div>
+
+  <!-- Conclusion -->
+  <div class="conclusion-box" style="margin-top:2rem">
+    <h2>🔐 Privy<span style="background:linear-gradient(135deg,#20d9ff,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Print</span></h2>
+    <p>PrivyPrint successfully demonstrates that physical document printing can be made genuinely secure, private, and trustless by leveraging the core pillars of Web 3.0 technology. Through client-side AES-256 encryption, decentralized IPFS storage, and immutable on-chain access governance via Solidity smart contracts, the system ensures that sensitive documents exist as plaintext only in the user's browser and — briefly — in the print shop's volatile RAM at the exact moment of printing. No plaintext data is ever stored on a central server, in a cloud database, or on a print shop's hard drive.</p>
+    <p>PrivyPrint not only solves a real, underserved security problem but does so while providing a premium, glassmorphic user experience that abstracts away Web3 complexity, making decentralized technology accessible to everyday users and print shop operators alike.</p>
+    <div class="pillars-final">
+      <span>Secure</span>
+      <span>Decentralized</span>
+      <span>Private</span>
+      <span>Trustless</span>
+      <span>User-Owned</span>
+    </div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<script>
+  function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.nav-tabs button').forEach((btn, i) => {
+      btn.classList.toggle('active', btn.getAttribute('onclick').includes(id));
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // animate progress bars
+    setTimeout(() => {
+      document.querySelectorAll('.progress-fill').forEach(el => {
+        const w = el.style.width; el.style.width = '0'; 
+        setTimeout(() => { el.style.width = w; }, 50);
+      });
+    }, 100);
+  }
+</script>
+</body>
+</html>

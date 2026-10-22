@@ -1,0 +1,89 @@
+================================================================================
+PRIVYPRINT: DECENTRALIZED SECURE PRINTING PLATFORM
+================================================================================
+
+1. PROJECT OVERVIEW
+--------------------------------------------------------------------------------
+PrivyPrint is a next-generation decentralized application (dApp) designed to 
+secure the physical document printing pipeline. It enables users to share 
+sensitive documents with print shops using end-to-end encryption, ensuring 
+Zero-PII (Personally Identifiable Information) storage on central servers. 
+The platform leverages blockchain technology for access control and IPFS for 
+distributed storage of encrypted ciphertext.
+
+2. CORE FEATURES
+--------------------------------------------------------------------------------
+- Wallet-Gated Identity: Users and print shops authenticate via MetaMask.
+- End-to-End Encryption: Documents are encrypted locally in the browser using 
+  AES-256 before being uploaded.
+- Asymmetric Key Exchange: Access keys are encrypted specifically for the 
+  recipient print shop's public key.
+- Blockchain Access Control: Print jobs are registered on an EVM-compatible 
+  blockchain to manage permissions and track status.
+- Timed Expiry: Access to documents automatically expires based on the 
+  blockchain timestamp.
+- Secure Preview & Print: Print shops can preview documents in a secure interface 
+  and trigger native printing without saving files locally.
+
+3. TECHNICAL STACK
+--------------------------------------------------------------------------------
+- Frontend Framework: Next.js 15 (App Router)
+- Language: TypeScript
+- Styling: Tailwind CSS (with Glassmorphism design system)
+- Animations: Framer Motion
+- Blockchain Interaction: Ethers.js v6, Hardhat
+- Smart Contracts: Solidity (EVM-compatible)
+- Encryption: Crypto-JS (AES-256), MetaMask (x25519-xsalsa20-poly1305)
+- Storage: IPFS (via Pinata)
+- Database: MongoDB (via Mongoose) for user profiles and metadata
+- Authentication: NextAuth.js (Credentials + Wallet logic)
+
+4. ARCHITECTURE & WORKFLOW
+--------------------------------------------------------------------------------
+A. SENDER FLOW:
+   1. Connect MetaMask wallet.
+   2. Select a registered Print Shop.
+   3. Upload a PDF document.
+   4. A unique AES access key is generated locally.
+   5. The file is encrypted with the AES key.
+   6. The encrypted file (ciphertext) is pinned to IPFS.
+   7. The AES key is encrypted using the Print Shop's public encryption key.
+   8. A "Print Job" is created on the blockchain containing the IPFS CID, 
+      the encrypted AES key, and job metadata (expiry, copies, etc.).
+
+B. PRINT SHOP FLOW:
+   1. Monitor the "Incoming Queue" dashboard.
+   2. Select a pending job.
+   3. Decrypt the AES access key using MetaMask's private key.
+   4. Fetch the ciphertext from IPFS and decrypt it locally with the AES key.
+   5. Preview the document and trigger the browser's native print dialog.
+   6. Confirm the print on-chain to clear the job.
+
+5. DIRECTORY STRUCTURE
+--------------------------------------------------------------------------------
+- app/: Contains the Next.js pages and API routes.
+  - api/: Backend handlers for registration, IPFS uploads, and user queries.
+  - sender/: Dashboard and logic for document owners.
+  - print-shop/: Dashboard and logic for printing providers.
+- components/: Reusable UI components (AppShell, Button, GlassPanel, etc.).
+- contracts/: Solidity smart contracts managing the platform logic.
+- lib/: Core utility libraries.
+  - contract.ts: On-chain interaction logic.
+  - encryption.ts: Local AES and asymmetric encryption utilities.
+  - wallet.ts: MetaMask connection and network management.
+  - ipfs.ts: Pinata integration for decentralized storage.
+- models/: Mongoose schemas for persistent storage in MongoDB.
+- scripts/: Deployment and utility scripts for the development environment.
+
+6. SECURITY MODEL
+--------------------------------------------------------------------------------
+- Zero-PII: No unencrypted document data ever leaves the user's machine.
+- Trustless Access: Only the assigned print shop's wallet can decrypt the 
+  file-level access key.
+- Revocation: Senders can revoke access on-chain at any time before completion.
+- Expiry Enforcement: Both the frontend and the smart contract enforce time-based 
+  expiry to ensure documents aren't accessible indefinitely.
+
+================================================================================
+Generated on: 2026-05-04
+================================================================================
